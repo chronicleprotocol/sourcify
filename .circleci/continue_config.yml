@@ -137,11 +137,11 @@ aliases:
 ####################
 workflows:
   build_publish_deploy_docker:
-    # Run build_publish_deploy when on staging or master AND when a module is changed and something needs to be built and deployed.
+    # Run build_publish_deploy when on staging or main AND when a module is changed and something needs to be built and deployed.
     when:
       # and:
       or:
-        - equal: [master, << pipeline.git.branch >>]
+        - equal: [main, << pipeline.git.branch >>]
         - equal: [staging, << pipeline.git.branch >>]
         # - or:
         #     [
@@ -184,12 +184,12 @@ workflows:
             - deploy
       - verification-e2e-holesky:
           requires:
-            - deploy # Tests workflow for not staging or master
+            - deploy # Tests workflow for not staging or main
   tests:
     when:
       and:
         - not:
-            equal: [master, << pipeline.git.branch >>]
+            equal: [main, << pipeline.git.branch >>]
         - not:
             equal: [staging, << pipeline.git.branch >>]
     jobs:

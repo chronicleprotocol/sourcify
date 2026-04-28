@@ -13,7 +13,7 @@ services=("server" "monitor")
 echo $GITHUB_CR_PAT | docker login ghcr.io --username kuzdogan --password-stdin
 
 # Triggered by a branch
-# e.g. sourcify/server:master
+# e.g. sourcify/server:main
 if [ -n "$CIRCLE_BRANCH" ]; then
   # Loop through each service
   for service in "${services[@]}"; do

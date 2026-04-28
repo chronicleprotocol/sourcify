@@ -14,7 +14,7 @@ ARTIFACT_REGISTRY_URL="europe-west1-docker.pkg.dev/sourcify-project/ghcr-proxy/e
 
 if [ "$CIRCLE_BRANCH" == "staging" ]; then
     ENVIRONMENT='staging'
-elif [ "$CIRCLE_BRANCH" == "master" ]; then
+elif [ "$CIRCLE_BRANCH" == "main" ]; then
     ENVIRONMENT='production'
 else
     echo "Invalid branch $CIRCLE_BRANCH. Check your config.yml"

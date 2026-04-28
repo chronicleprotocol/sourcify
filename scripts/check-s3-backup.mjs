@@ -14,7 +14,7 @@ const bareBonesS3 = new S3Client({
 });
 
 // fetch latest workflow id
-const branch = "master";
+const branch = "main";
 const circleCIWorkflowsUrl = `https://circleci.com/api/v2/insights/gh/ethereum/sourcify/workflows/e2e-tests?branch=${branch}`;
 const circleCIWorkflowsResult = await fetch(circleCIWorkflowsUrl);
 const circleCIWorkflowsJson = await circleCIWorkflowsResult.json();

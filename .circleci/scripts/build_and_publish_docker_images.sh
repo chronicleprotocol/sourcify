@@ -21,7 +21,7 @@ IMAGE_NAME="$NAMESPACE/$SERVICE"
 echo $GITHUB_CR_PAT | docker login ghcr.io --username kuzdogan --password-stdin
 
 # Triggered by a branch
-# e.g. sourcify/server:master-arm64
+# e.g. sourcify/server:main-arm64
 if [ -n "$CIRCLE_BRANCH" ]; then
     BRANCH_TAG="$IMAGE_NAME:$CIRCLE_BRANCH-$ARCH"
     TAG_COMMAND="-t $BRANCH_TAG"
@@ -48,7 +48,7 @@ docker push --all-tags $IMAGE_NAME
 
 mkdir -p workspace
 
-# In branch builds we only need to write to server:master-arm64.txt
+# In branch builds we only need to write to server:main-arm64.txt
 if [ -n "$CIRCLE_BRANCH" ]; then
     # Get the repository digest of the image
     REPO_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $BRANCH_TAG | cut -d '@' -f 2)

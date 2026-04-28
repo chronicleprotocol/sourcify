@@ -10,14 +10,14 @@ is_on_staging_branch() {
 }
 
 check_branch_sync() {
-  ## Check if the staging and master branches are synced with the origin
-  echo "Fetching and checking if the staging and master branches are synced with the origin"
-  # Fetch and check if the staging and master branches are synced with the origin
-  git fetch origin master:tmpMaster
+  ## Check if the staging and main branches are synced with the origin
+  echo "Fetching and checking if the staging and main branches are synced with the origin"
+  # Fetch and check if the staging and main branches are synced with the origin
+  git fetch origin main:tmpMain
   git fetch origin staging:tmpStaging
 
-  LOCAL_MASTER=$(git rev-parse master)
-  REMOTE_MASTER=$(git rev-parse tmpMaster)
+  LOCAL_MAIN=$(git rev-parse main)
+  REMOTE_MAIN=$(git rev-parse tmpMain)
 
   LOCAL_STAGING=$(git rev-parse staging)
   REMOTE_STAGING=$(git rev-parse tmpStaging)
@@ -27,16 +27,16 @@ check_branch_sync() {
     error_exit "Your local staging branch is not up to date with origin/staging. Please sync before running this script."
   fi
 
-  if [ $LOCAL_MASTER != $REMOTE_MASTER ]; then
-    warn "Your local master branch is not up to date with origin/master. Do you want to continue? (y/N):"
+  if [ $LOCAL_MAIN != $REMOTE_MAIN ]; then
+    warn "Your local main branch is not up to date with origin/main. Do you want to continue? (y/N):"
     read user_input
     if [[ $user_input != [yY] && $user_input != [yY][eE][sS] ]]; then
-      error_exit "Please sync your local master branch with origin/master before running this script."
+      error_exit "Please sync your local main branch with origin/main before running this script."
     fi
   fi
 
   # Clean up temporary branches
-  git branch -D tmpMaster
+  git branch -D tmpMain
   git branch -D tmpStaging
 }
 
@@ -51,11 +51,11 @@ create_gh_deploy_pr() {
     error_exit "You are not logged in to gh. Please log in before running this script."
   fi
 
-  # Check if an open PR exists from staging to master
-  OPEN_PR_NUMBER=$(gh pr list --base master --state open | grep staging | awk '{print $1}')
+  # Check if an open PR exists from staging to main
+  OPEN_PR_NUMBER=$(gh pr list --base main --state open | grep staging | awk '{print $1}')
   CREATE_PR=true
   if [ -n "$OPEN_PR_NUMBER" ]; then
-    warn "An open PR from staging to master already exists. Do you still want to create a new PR? (y/N):"
+    warn "An open PR from staging to main already exists. Do you still want to create a new PR? (y/N):"
     read confirm
     if [[ $confirm != [yY] && $confirm != [yY][eE][sS] ]]; then
       echo "Skipping PR creation as per user request."
@@ -65,11 +65,11 @@ create_gh_deploy_pr() {
 
   if $CREATE_PR; then
     echo "Creating a PR for the staging branch"
-    gh pr create --title "Deploy latest to production" --body "" --head staging --base master
+    gh pr create --title "Deploy latest to production" --body "" --head staging --base main
     if [ $? -ne 0 ]; then
       error_exit "Failed to create PR. Exiting."
     fi
-    OPEN_PR_NUMBER=$(gh pr list --base master --state open | grep staging | awk '{print $1}')
+    OPEN_PR_NUMBER=$(gh pr list --base main --state open | grep staging | awk '{print $1}')
     echo "Created PR number $OPEN_PR_NUMBER"
   else
     echo "Continuing without creating a PR."
@@ -80,8 +80,8 @@ ask_if_release_pr_merged() {
   echo "Now please review and approve the release new versions PR to staging."
 }
 
-ask_if_master_pr_merged() {
-  echo "Now please review and approve the 'Deploy latest to production' PR to master."
+ask_if_main_pr_merged() {
+  echo "Now please review and approve the 'Deploy latest to production' PR to main."
 }
 
 push_to_staging() {
